@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>登録</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>新規登録</h2>
+    <form action="/users/register" method="post">
+        <input type="text" name="username" placeholder="ユーザー名" required>
+        <input type="password" name="password" placeholder="パスワード" required>
+        <button type="submit">登録</button>
+    </form>
+    <span th:if="${error}" th:text="${error}"></span>
+    <a href="/users/login">すでにアカウントをお持ちですか？ログイン</a>
+    <a href="/"><button>ホームに戻る</button></a> <!-- ホームに戻るボタン -->
+</body>
+</html>

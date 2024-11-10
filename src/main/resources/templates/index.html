@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <title>Pomodoro Timer</title>
+	    <link rel="stylesheet" href="style.css">
+	</head>
+<body>
+	<!-- ログイン状態のメッセージ表示 -->
+       <div class="header">
+            <div th:if="${session.userId != null}">
+                <p>ログイン中です</p>
+                <a href="/users/logout">ログアウト</a>
+				<a href="/tasks" class="neumorphic-button" id="taskButton">タスクページへ</a>
+            </div>
+            <div th:if="${session.userId == null}">
+                <p>ログアウト中です</p>
+                <a href="/users/login">ログイン</a>
+                <a href="/users/register">新規登録</a>
+            </div>
+			
+       </div>
+	   
+	    <form action="/tasks/save" method="post">
+	        <input type="text" class="task-input"  name="taskName" placeholder="ここにタスクを記入" required>
+	        <button type="submit" class="neumorphic-button" id="saveButton">保存</button>
+	    </form>
+		
+    <div id="timer" class="timer-circle" onclick="toggleTimer()">
+        <p><span id="remainingTime">25:00</span></p>
+		<p id="startStopButton">Start</p>
+    </div>
+    <button onclick="resetTimer()" class="neumorphic-button" id="resetButton">Reset</button>
+	
+	<!-- 音声ファイル -->
+    <audio id="alarmSound" src="/alarm.mp3"></audio>
+
+<script>
+	let socket;
+	let countdownStarted = false;
+	let isRunning = false;
+	const initialTime = "25:00";
+	let currentTime = initialTime;
+
+	// WebSocket を初期化する関数
+	function initializeWebSocket() {
+	    socket = new WebSocket("ws://localhost:8080/ws/timer");
+
+	    // 接続が開かれたとき
+	    socket.onopen = function() {
+	        console.log("WebSocket connection opened");
+	    };
+
+	    // メッセージを受信したとき
+	    socket.onmessage = function(event) {
+	        console.log("Received message:", event.data);
+	        const remainingTimeElement = document.getElementById('remainingTime');
+	        if (remainingTimeElement && event.data) {
+	            if (event.data === "Time's up! Starting break..." || event.data === "Break time's up! Starting work...") {
+	                playAlarm(); // アラーム音を再生
+	            }
+	            remainingTimeElement.textContent = event.data;
+	        }
+	    };
+
+	    // 接続が閉じられたとき
+	    socket.onclose = function() {
+	        console.log("WebSocket connection closed");
+	        countdownStarted = false; // 接続が閉じられたらリセット
+	    };
+
+	    // エラーが発生したとき
+	    socket.onerror = function(error) {
+	        console.error("WebSocket error:", error);
+	    };
+	}
+
+	// タイマー開始
+	function startTimer() {
+	    if (!countdownStarted) {
+	        if (!socket || socket.readyState !== WebSocket.OPEN) {
+	            initializeWebSocket();
+	            socket.onopen = function() {
+	                console.log("WebSocket connection opened");
+	                socket.send("start");
+	            };
+	        } else {
+	            socket.send("start");
+	        }
+	        countdownStarted = true;
+	    }
+	}
+
+	// タイマー停止
+	function stopTimer() {
+	    if (socket) {
+	        socket.send("stop");
+	        socket.close();
+	        countdownStarted = false;
+	    }
+	}
+
+	// タイマーリセット
+	function resetTimer() {
+	    stopTimer(); // タイマーを停止
+
+	    // WebSocket を再初期化して「reset」コマンドを送信
+	    initializeWebSocket();
+	    socket.onopen = function() {
+	        socket.send("reset");
+	        console.log("Reset command sent");
+	    };
+
+	    // クライアント側の表示をリセット
+	    if (isBreakTime) {
+	        currentTime = "00:05"; // 休憩タイマーの初期値を設定
+	    } else {
+	        currentTime = "10:00"; // 作業タイマーの初期値を設定
+	    }
+
+	    document.getElementById("remainingTime").textContent = currentTime;
+	    isRunning = false;
+	    document.getElementById("startStopButton").textContent = "Start";
+	}
+
+	// タイマーの開始・停止ボタン
+	function toggleTimer() {
+	    const startStopButton = document.getElementById("startStopButton");
+	    if (!isRunning) {
+	        playAlarm(); // ユーザーがボタンを押したときに音声を再生してみる
+	        startTimer();
+	        startStopButton.textContent = "Stop";
+	        isRunning = true;
+	    } else {
+	        stopTimer();
+	        startStopButton.textContent = "Start";
+	        isRunning = false;
+	    }
+	}
+
+	// 音声アラームを再生
+	function playAlarm() {
+	    const alarmSound = document.getElementById("alarmSound");
+	    if (alarmSound) {
+	        alarmSound.play().catch(error => {
+	            console.error("Failed to play the alarm sound:", error);
+	        });
+	    }
+	}
+
+	// 初期化
+	initializeWebSocket();
+</script>
+</body>
+</html>

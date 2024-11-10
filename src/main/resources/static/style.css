@@ -1,0 +1,142 @@
+/* リセットスタイル */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* 全体のレイアウト */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #e0e5ec;
+    padding: 0 30px;
+	text-align: right;
+	width: 100%;
+	max-width: 400px;
+	margin: 0 auto;
+}
+.header{
+	width: 100%;
+	max-width: 400px;
+	margin: 0 auto;
+	position: absolute;
+	padding: 0 30px;
+	top: 0;
+}
+
+#taskButton{
+	display: inline-block; /* インラインブロック要素にする */
+	margin-left: auto; /* 左マージンを自動にして右寄せ */
+}
+
+/* タスク入力ボックス */
+.task-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: inset 6px 6px 12px #b8b9be, inset -6px -6px 12px #ffffff;
+    font-size: 16px;
+	text-align: left; /* テキストを左寄せにする */
+	padding-top: 10px; /* プレースホルダーを上に寄せる */
+	padding-left: 10px;
+	line-height: normal; /* 必要に応じて行の高さを調整 */
+	resize: none; 
+}
+
+/* タイマーの円 */
+.timer-circle {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background-color: #e0e5ec;
+    display: flex;
+	flex-direction: column; /* 縦に要素を並べる */
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #6c6c6c;
+    box-shadow: 6px 6px 12px #b8b9be, -6px -6px 12px #ffffff;
+    margin-bottom: 20px;
+    cursor: pointer; /* クリック可能にする */
+    transition: transform 0.2s;
+}
+#startStopButton {
+    font-size: 24px; /* "Start" の文字サイズを小さくする */
+}
+.timer-circle:active {
+    transform: scale(0.95); /* 押したときに縮小するエフェクト */
+}
+
+/* ニューモーフィズムボタン */
+.neumorphic-button {
+    background-color: #e0e5ec;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 6px 6px 12px #b8b9be, -6px -6px 12px #ffffff;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #6c6c6c;
+    cursor: pointer;
+    margin: 10px;
+    transition: transform 0.2s;
+	text-align: right;
+}
+.neumorphic-button:active {
+    transform: scale(0.95);
+}
+#saveButton {
+	display: inline-block; /* インラインブロック要素にする */
+	margin-left: auto; /* 左マージンを自動にして右寄せ */
+}
+#resetButton {
+	display: inline-block; /* インラインブロック要素にする */
+	margin-left: auto; /* 左マージンを自動にして右寄せ */
+}
+/* タイトルやその他のテキスト */
+.text {
+    font-size: 24px;
+    color: #6c6c6c;
+    margin-top: 10px;
+}
+.task{
+	text-align: left;
+	line-height: 1.5;
+	color: #6c6c6c;	
+	display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    min-height: 100vh;
+    background-color: #e0e5ec;
+    padding: 30px;
+	text-align: left;
+	width: 100%;
+	max-width: 400px;
+	margin: 0 auto 0 auto;
+
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 600px) {
+    .timer-circle {
+        width: 200px;
+        height: 200px;
+        font-size: 36px;
+    }
+
+    .task-input {
+        font-size: 14px;
+    }
+
+    .text {
+        font-size: 20px;
+    }
+}

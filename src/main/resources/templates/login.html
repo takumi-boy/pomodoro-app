@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>Login</h2>
+    <form action="/users/login" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+    <span th:if="${error}" th:text="${error}"></span>
+    <a href="/users/register">Don't have an account? Register</a>
+	<a href="/"><button>ホームに戻る</button></a> <!-- ホームに戻るボタン -->
+</body>
+</html>
