@@ -1,11 +1,14 @@
 # ベースイメージとして OpenJDK を使用
 FROM openjdk:17-jdk-slim
 
-# アプリケーションの JAR ファイルを指定
-ARG JAR_FILE=target/pomodoro-0.0.1-SNAPSHOT.jar
+# 作業ディレクトリを作成
+WORKDIR /app
 
-# JAR ファイルをコンテナにコピー
-COPY ${JAR_FILE} app.jar
+# プロジェクトのファイルをすべてコピー
+COPY . .
 
-# アプリケーションを実行
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Maven Wrapper を使用して依存関係を解決し、パッケージを作成
+RUN ./mvnw clean package
+
+# アプリケーションの JAR ファイルを指定して実行
+ENTRYPOINT ["java", "-jar", "target/pomodoro-0.0.1-SNAPSHOT.jar"]
