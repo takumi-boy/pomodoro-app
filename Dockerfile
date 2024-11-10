@@ -7,6 +7,9 @@ WORKDIR /app
 # プロジェクトのファイルをすべてコピー
 COPY . .
 
+# Maven Wrapper に実行権限を付与
+RUN chmod +x mvnw
+
 # Maven Wrapper を使用して依存関係を解決し、パッケージを作成
 RUN ./mvnw clean package
 
