@@ -45,7 +45,7 @@
 
 	// WebSocket を初期化する関数
 	function initializeWebSocket() {
-	    socket = new WebSocket("ws://localhost:8080/ws/timer");
+	    socket = new WebSocket("wss://pomodoro-app-xczb.onrender.com/ws/timer");
 
 	    // 接続が開かれたとき
 	    socket.onopen = function() {
